@@ -38,8 +38,8 @@ class EchoHandler(SocketServer.DatagramRequestHandler):
                     method = parameters[0]
                     protocol = parameters[1].split(':')[0]
                     address = parameters[1].split(':')[1]
-                    user = address.split('@')[0]
-                    ip = address.split('@')[1]
+                    login = address.split('@')[0]
+                    server_ip = address.split('@')[1]
                     client_version = parameters[2]
                     if protocol != 'sip' or client_version != 'SIP/1.0'\
                         and client_version != 'SIP/2.0':
@@ -66,7 +66,8 @@ class EchoHandler(SocketServer.DatagramRequestHandler):
                     print "Enviado:\n" + response
                 elif method == 'ACK':
                     # --------------------- Envío RTP -------------------------
-                    toRun = "./mp32rtp -i" + client_ip + "-p 23032 < " + AUDIO_FILE
+                    toRun = "./mp32rtp -i " + client_ip + " -p 23032 < "\
+                            + AUDIO_FILE
                     print "Enviando contenido RTP al cliente..."
                     os.system(toRun)
                     print "Finalizado envío RTP"
@@ -83,16 +84,16 @@ if __name__ == "__main__":
 
     # Evaluación de parámetros de la línea de comandos
     try:
-        SERVER_IP = sys.argv[1]
-        SERVER_PORT = int(sys.argv[2])
+        MY_IP = sys.argv[1]
+        MY_PORT = int(sys.argv[2])
         AUDIO_FILE = sys.argv[3]
         if not os.path.isfile(AUDIO_FILE):
-            sys.exit("Usage: python server.py IP port audio_file")
+            sys.exit("Usage: python server.py ServerIP ServerPort audio_file")
     except:
-        print ("Usage: python server.py IP port audio_file")
+        print ("Usage: python server.py ServerIP ServerPort audio_file")
         raise SystemExit
 
     # Creamos servidor de eco y escuchamos
-    serv = SocketServer.UDPServer((SERVER_IP, SERVER_PORT), EchoHandler)
+    serv = SocketServer.UDPServer((MY_IP, MY_PORT), EchoHandler)
     print "Listening..."
     serv.serve_forever()
