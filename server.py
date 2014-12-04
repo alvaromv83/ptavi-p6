@@ -43,25 +43,25 @@ class EchoHandler(SocketServer.DatagramRequestHandler):
                     client_version = parameters[2]
                     if protocol != 'sip' or client_version != 'SIP/1.0'\
                         and client_version != 'SIP/2.0':
-                        response = version + " 400 Bad Request\r\n\r\n"
+                        response = MY_VERSION + " 400 Bad Request\r\n\r\n"
                         self.wfile.write(response)
                         print "Enviado:\n" + response
                         break
                 except:
-                    response = version + " 400 Bad Request\r\n\r\n"
+                    response = MY_VERSION + " 400 Bad Request\r\n\r\n"
                     self.wfile.write(response)
                     print "Enviado:\n" + response
                     break
 
                 # Evaluación del método que nos envía el cliente
                 if method == 'INVITE':
-                    response = version + " 100 Trying\r\n\r\n"
-                    response += version + " 180 Ringing\r\n\r\n"
-                    response += version + " 200 OK\r\n\r\n"
+                    response = MY_VERSION + " 100 Trying\r\n\r\n"\
+                             + MY_VERSION + " 180 Ringing\r\n\r\n"\
+                             + MY_VERSION + " 200 OK\r\n\r\n"
                     self.wfile.write(response)
                     print "Enviado:\n" + response
                 elif method == 'BYE':
-                    response = version + " 200 OK\r\n\r\n"
+                    response = MY_VERSION + " 200 OK\r\n\r\n"
                     self.wfile.write(response)
                     print "Enviado:\n" + response
                 elif method == 'ACK':
@@ -72,7 +72,7 @@ class EchoHandler(SocketServer.DatagramRequestHandler):
                     os.system(toRun)
                     print "Finalizado envío RTP"
                 else:
-                    response = version + " 405 Method Not Allowed\r\n\r\n"
+                    response = MY_VERSION + " 405 Method Not Allowed\r\n\r\n"
                     self.wfile.write(response)
                     print "Enviado:\n" + response
 
@@ -80,7 +80,7 @@ class EchoHandler(SocketServer.DatagramRequestHandler):
 if __name__ == "__main__":
 
     # Versión del protocolo SIP
-    version = "SIP/2.0"
+    MY_VERSION = "SIP/2.0"
 
     # Evaluación de parámetros de la línea de comandos
     try:
